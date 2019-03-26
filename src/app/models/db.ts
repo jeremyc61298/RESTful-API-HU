@@ -4,4 +4,7 @@
 import mongoose from "mongoose";
 import * as config from "../../config";
 
-export const db = mongoose.connect(`mongodb://${config.dbHost}/c${config.dbName}`);
+export const db = mongoose.connect(
+    `mongodb://${config.dbHost}/${config.dbName}`,
+    { useNewUrlParser: true }
+);
