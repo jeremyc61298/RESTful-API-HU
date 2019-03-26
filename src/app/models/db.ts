@@ -6,5 +6,8 @@ import * as config from "../../config";
 
 export const db = mongoose.connect(
     `mongodb://${config.dbHost}/${config.dbName}`,
-    { useNewUrlParser: true }
+    { 
+        useNewUrlParser: true,
+        useCreateIndex: true 
+    }
 );

@@ -8,9 +8,9 @@ import * as common from "./common";
 export async function getAllUsers(req: Request, res: Response) {
     try {
         let users = await User.find({});
-        res.status(500).json(users);
+        res.json(users);
     } catch(err) {
-        res.json({ message: common.defaultServerErrorMessage});
+        res.status(500).json({ message: common.defaultServerErrorMessage});
     }
 }
 
@@ -33,7 +33,8 @@ export async function createUser(req: Request, res: Response) {
         res.json(user);
     } catch(err) {
         // TODO: Need to determine if user error or server error
-        res.status(500).json({ message: common.defaultServerErrorMessage });
+        res.status(400).json({ message: common.defaultUserErrorMessage });
+        console.log(err);
     }
 }
 
