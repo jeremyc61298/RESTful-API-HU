@@ -35,3 +35,16 @@ const ClassSchema = new mongoose.Schema({
         ref: "User"
     }
 });
+
+export interface ClassData {
+    department: number,
+    number: number,
+    title: string,
+    // TODO: Not sure if these should be mongoose object id's or strings
+    teacher: mongoose.Schema.Types.ObjectId,
+    student: mongoose.Schema.Types.ObjectId
+}
+
+export interface Class extends mongoose.Document, ClassData { }
+
+export const Class = mongoose.model<Class>("Class", ClassSchema);
