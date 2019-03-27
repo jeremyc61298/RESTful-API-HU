@@ -1,14 +1,22 @@
 // api/common.ts
 // Jeremy Campbell
 // Shared code for the api feature
-export const defaultServerErrorMessage = "Oops! Something went wrong on our end";
+import { Response } from "express";
+
+export const defaultServerError = {
+    message: "Oops! Something went wrong on our end"
+}
+
 export const defaultUserErrorMessage = "Incorrect data in request, try again";
 
-enum MongooseErrorName {
-    MongoError, 
-    ValidatorError
-} 
+interface MongoError extends Error {
+    code: number,
+}
 
-export interface MongooseError {
-    name: MongooseErrorName
+export function handleError(err: MongoError, res: Response) {
+    if (err.name == "ValidationError" || (err.name == "MongoError" && err.code == 11000)) {
+        res.status(400).json(err);
+    } else {
+        res.status(500).json(defaultServerError);
+    }
 }
