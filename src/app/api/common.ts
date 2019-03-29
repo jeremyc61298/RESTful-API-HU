@@ -14,7 +14,10 @@ export class API_Error {
 export enum ErrorMessage {
     defaultServer = "Oops! Something went wrong on our end",
     defaultUser = "Incorrect data in request try again",
-    passwordNeeded = "Please provide a password"
+    passwordNeeded = "Please provide a password",
+    userNotFound = "User not found",
+    incorrectAuthType = "Incorrect authorization type", 
+    noAuthHeader = "No authorization header"
 }
 
 interface MongoError extends Error {
