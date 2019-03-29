@@ -3,7 +3,7 @@
 // Routing for the RESTful API
 import { Router } from "express";
 import * as userControl from "./user";
-import { checkAuthentication, checkToken } from "./auth";
+import { checkAuthentication, checkToken, checkAuthorization, Roles } from "./auth";
 
 export const router = Router();
 
@@ -13,4 +13,4 @@ router.use(checkToken);
 
 // Users
 router.get("/users", userControl.getAllUsers);
-router.post("/users", userControl.createUser);
+router.post("/users", checkAuthorization(Roles.admin), userControl.createUser);

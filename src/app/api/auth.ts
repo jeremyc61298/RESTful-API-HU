@@ -7,6 +7,7 @@ import crypto from "crypto";
 import * as jwt from "../jwt";
 import { User } from "../models/user";
 import { API_Error, ErrorMessage, handleError } from "./common";
+import { userInfo } from "os";
 
 interface UserPayload extends jwt.Payload {
     sub: string;
@@ -77,5 +78,21 @@ export async function checkToken(req: Request, res: Response, next: NextFunction
         }
     } else {
         res.status(401).json(new API_Error(ErrorMessage.noAuthHeader));
+    }
+}
+
+export enum Roles {
+    admin = "admin",
+    teacher = "teacher",
+    student = "student"
+}
+
+export function checkAuthorization(...allowedRoles: Roles[]) {
+    return (req: Request, res: Response, next: NextFunction) => {
+        if (allowedRoles.includes(res.locals.role)) {
+            next();
+        } else {
+            res.status(403).json(new API_Error(ErrorMessage.notAuthorized));
+        }
     }
 }

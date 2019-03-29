@@ -17,7 +17,8 @@ export enum ErrorMessage {
     passwordNeeded = "Please provide a password",
     userNotFound = "User not found",
     incorrectAuthType = "Incorrect authorization type", 
-    noAuthHeader = "No authorization header"
+    noAuthHeader = "No authorization header",
+    notAuthorized = "Not authorized"
 }
 
 interface MongoError extends Error {
