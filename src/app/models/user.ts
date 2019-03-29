@@ -31,10 +31,10 @@ const UserSchema = new mongoose.Schema({
         enum: ["admin", "teacher", "student"]
     }, 
     password: {
-        type: String
+        type: Buffer
     },
     salt: {
-        type: String
+        type: Buffer
     }
 }, {
     toJSON: {
@@ -55,8 +55,8 @@ export interface UserData {
     lastname: string,
     email: string,
     role: string, 
-    password: string,
-    salt: string
+    password: Buffer,
+    salt: Buffer
 }
 
 export interface User extends mongoose.Document, UserData { }

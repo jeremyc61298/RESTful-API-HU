@@ -6,5 +6,9 @@ import * as userControl from "./user";
 
 export const router = Router();
 
+// Authentication 
+router.use("/login");
+
+// Users
 router.get("/users", userControl.getAllUsers);
 router.post("/users", userControl.createUser);

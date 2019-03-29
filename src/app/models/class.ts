@@ -25,7 +25,7 @@ const ClassSchema = new mongoose.Schema({
         trim: true,
         maxlength: 200
     },
-    // TODO: Need to be able  to validate if user is a teacher or a student
+   
     teacher: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
@@ -41,8 +41,8 @@ export interface ClassData {
     number: number,
     title: string,
     // TODO: Not sure if these should be mongoose object id's or strings
-    teacher: mongoose.Schema.Types.ObjectId,
-    student: mongoose.Schema.Types.ObjectId
+    teacher: string,
+    student: string
 }
 
 export interface Class extends mongoose.Document, ClassData { }

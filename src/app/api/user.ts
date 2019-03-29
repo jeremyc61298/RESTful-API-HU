@@ -2,7 +2,9 @@
 // Jeremy Campbell
 // Middleware for api requests
 import { Request, Response, NextFunction } from "express";
-import { User, UserData } from "../models/user";
+import crytpo from "crypto";
+import { encrypt } from "./auth";
+import { User } from "../models/user";
 import * as common from "./common";
 
 export async function getAllUsers(req: Request, res: Response) {
@@ -14,29 +16,24 @@ export async function getAllUsers(req: Request, res: Response) {
     }
 }
 
-// TODO: Should I sanitize the input here?
 export async function createUser(req: Request, res: Response) {
-    let userData: UserData = {
-        username: req.body.username,
-        firstname: req.body.firstname, 
-        lastname: req.body.lastname,
-        email: req.body.email,
-        role: req.body.role,
-        password: req.body.password,
-        salt: generateSalt()
-    }; 
+    let user = new User();
+    user.username = req.body.username;
+    user.firstname = req.body.firstname; 
+    user.lastname = req.body.lastname;
+    user.email = req.body.email;
+    user.role = req.body.role;
+    user.salt = crytpo.randomBytes(8);
 
-    const user = new User(userData);
-
-    try {
-        await user.save();
-        res.json(user);
-    } catch(err) {
-        common.handleError(err, res);
+    if (!req.body.password) {
+        res.json({ message: "Please provide a password"});
+    } else {
+        try {
+            user.password = await encrypt(req.body.password, user.salt);
+            await user.save();
+            res.json(user);
+        } catch(err) {
+            common.handleError(err, res);
+        }
     }
-}
-
-// TODO: Make this work
-function generateSalt() : string {
-    return "";
 }
