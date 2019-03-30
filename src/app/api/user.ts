@@ -16,6 +16,12 @@ export async function getAllUsers(req: Request, res: Response) {
     }
 }
 
+export async function getUser(req: Request, res: Response) {
+
+}
+
+export function userIdParam()
+
 export async function createUser(req: Request, res: Response) {
     let user = new User();
     user.username = req.body.username;

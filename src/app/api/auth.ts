@@ -7,7 +7,6 @@ import crypto from "crypto";
 import * as jwt from "../jwt";
 import { User } from "../models/user";
 import { API_Error, ErrorMessage, handleError } from "./common";
-import { userInfo } from "os";
 
 interface UserPayload extends jwt.Payload {
     sub: string;

@@ -13,4 +13,8 @@ router.use(checkToken);
 
 // Users
 router.get("/users", userControl.getAllUsers);
+router.get("/users/:userid", userControl.getUser);
 router.post("/users", checkAuthorization(Roles.admin), userControl.createUser);
+
+// Parameter Handlers
+router.param("userid", userControl.userIdParam);
