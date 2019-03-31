@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile:run": "tsc && nodemon .",
-    "compile:run:watch": "tsc --watch && nodemon . --watch"
+    "compile:watch": "tsc --watch",
+    "run:watch": "nodemon . --watch"
   },
   "repository": {
     "type": "git",

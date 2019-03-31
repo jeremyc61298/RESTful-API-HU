@@ -2,6 +2,16 @@
 // Jeremy Campbell
 // Shared code for the api feature
 import { Response } from "express";
+import util from "util";
+import crypto from "crypto";
+
+export enum Roles {
+    admin = "admin",
+    teacher = "teacher",
+    student = "student"
+}
+
+// ERRORS
 
 export class API_Error {
     message: ErrorMessage
@@ -13,7 +23,8 @@ export class API_Error {
 
 export enum ErrorMessage {
     defaultServer = "Oops! Something went wrong on our end",
-    defaultUser = "Incorrect data in request try again",
+    defaultUser = "Incorrect data in request",
+    missingParams = "Missing parameters in request",
     passwordNeeded = "Please provide a password",
     userNotFound = "User not found",
     incorrectAuthType = "Incorrect authorization type", 
@@ -31,4 +42,11 @@ export function handleError(err: MongoError, res: Response) {
     } else {
         res.status(500).json(new API_Error(ErrorMessage.defaultServer));
     }
+}
+
+// ENCRYPTION
+const pbkdf2P = util.promisify(crypto.pbkdf2);
+
+export function encrypt(password: string, salt: Buffer) : Promise<Buffer> {
+    return pbkdf2P(password, salt, 10000, 256, 'sha512');
 }

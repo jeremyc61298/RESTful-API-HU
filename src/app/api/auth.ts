@@ -2,11 +2,10 @@
 // Jeremy Campbell
 // Authorization for the API feature
 import { Request, Response, NextFunction } from "express";
-import util from "util";
-import crypto from "crypto";
 import * as jwt from "../jwt";
+import * as config from "../../config";
 import { User } from "../models/user";
-import { API_Error, ErrorMessage, handleError } from "./common";
+import { API_Error, ErrorMessage, handleError, Roles, encrypt } from "./common";
 
 interface UserPayload extends jwt.Payload {
     sub: string;
@@ -16,12 +15,6 @@ interface UserPayload extends jwt.Payload {
 
 const secret = "spiderman";
 
-const pbkdf2P = util.promisify(crypto.pbkdf2);
-
-export function encrypt(password: string, salt: Buffer) : Promise<Buffer> {
-    return pbkdf2P(password, salt, 10000, 256, 'sha512');
-}
-
 export async function makeToken(user: User) {
     let token = await jwt.signP<UserPayload>({
         sub: user._id,
@@ -29,7 +22,7 @@ export async function makeToken(user: User) {
         role: user.role
     },
     secret, {
-        expiresIn: "1min"
+        expiresIn: config.tokenExpireTime
     });
     return token;
 }
@@ -78,12 +71,6 @@ export async function checkToken(req: Request, res: Response, next: NextFunction
     } else {
         res.status(401).json(new API_Error(ErrorMessage.noAuthHeader));
     }
-}
-
-export enum Roles {
-    admin = "admin",
-    teacher = "teacher",
-    student = "student"
 }
 
 export function checkAuthorization(...allowedRoles: Roles[]) {

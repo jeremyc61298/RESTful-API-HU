@@ -9,7 +9,7 @@ const UserSchema = new mongoose.Schema({
         type: String, 
         match: /^[a-zA-Z\d]([a-zA-Z\d]|[_-][a-zA-Z\d])+$/,
         minlength: 3,
-        maxlength: 30,
+        maxlength: 20,
         unique: true
     }, 
     firstname: {

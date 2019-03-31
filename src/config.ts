@@ -6,3 +6,5 @@ export const portNum = 8000;
 export const dbHost = "localhost";
 export const dbName = "restfulDB";
 export const staticDir = "static";
+export const tokenExpireTime = "1hr";
+export const objectIdLength = 24;
