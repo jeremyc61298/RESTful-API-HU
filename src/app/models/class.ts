@@ -3,12 +3,13 @@
 // Model for a class 
 import "./db";
 import mongoose from "mongoose";
+import * as config from "../../config";
 
 const ClassSchema = new mongoose.Schema({
     department: {
         type: String,
-        minlength: 4,
-        maxlength: 4,
+        minlength: config.deptStringSize,
+        maxlength: config.deptStringSize,
         uppercase: true
     },
     number: {
@@ -30,19 +31,28 @@ const ClassSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
-    student: {
+    students: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: "User"
+    }
+}, {
+    toJSON: {
+        getters: false, 
+        virtuals: false,
+        transform: (doc, obj, options) => {
+            delete obj.__v;
+            delete obj.students;
+            return obj;
+        }
     }
 });
 
 export interface ClassData {
-    department: number,
+    department: string,
     number: number,
     title: string,
-    // TODO: Not sure if these should be mongoose object id's or strings
     teacher: string,
-    student: string
+    students: string
 }
 
 export interface Class extends mongoose.Document, ClassData { }

@@ -9,10 +9,9 @@ export async function verifyUser(req: Request, res: Response, next: NextFunction
     try {
         let user = res.locals.user;
         if (!user) {
-            res.json(new API_Error(ErrorMessage.userNotFound));
+            res.status(404).json(new API_Error(ErrorMessage.userNotFound));
         } else  {
             if (res.locals.role != Roles.admin) {
-                console.log(user.role)
                 if (req.body.current && 
                     req.body.password &&
                     user.password.equals(await encrypt(req.body.current, user.salt))) {

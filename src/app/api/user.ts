@@ -1,13 +1,13 @@
 // api/control.ts
 // Jeremy Campbell
-// Middleware for api requests
+// Middleware for api requests that deal with users
 import { Request, Response, NextFunction } from "express";
 import crytpo from "crypto";
 import { User } from "../models/user";
 import { API_Error, ErrorMessage, handleError, encrypt, Roles } from "./common";
 import * as config from "../../config";
 
-export async function findUserFromUseridParam(req: Request, res: Response, next: NextFunction, userid: string) {
+export async function findUserFromIdParam(req: Request, res: Response, next: NextFunction, userid: string) {
     try {
         if (userid.length == config.objectIdLength) {
             res.locals.user = await User.findById(userid);
@@ -47,7 +47,6 @@ export function verifyReadAllUsersAccess(...allowedRoles: Roles[]) {
 
 export async function getAllUsers(req: Request, res: Response) {
     try {
-        console.log(res.locals.readUsersQuery);
         let users = await User.find(res.locals.readUsersQuery);
         res.json(users);
     } catch(err) {
@@ -59,7 +58,7 @@ export async function getUser(req: Request, res: Response) {
     if (res.locals.user) {
         res.json(res.locals.user);
     } else {
-        res.status(400).json(new API_Error(ErrorMessage.userNotFound));
+        res.status(404).json(new API_Error(ErrorMessage.userNotFound));
     }
 }
 
@@ -74,7 +73,7 @@ export async function createUser(req: Request, res: Response) {
     user.salt = crytpo.randomBytes(8);
 
     if (!req.body.password) {
-        res.json(new API_Error(ErrorMessage.passwordNeeded));
+        res.status(400).json(new API_Error(ErrorMessage.passwordNeeded));
     } else {
         try {
             user.password = await encrypt(req.body.password, user.salt);
@@ -92,7 +91,7 @@ export async function deleteUser(req: Request, res: Response) {
             await res.locals.user.remove();
             res.json(res.locals.user);
         } else {
-            res.status(400).json(new API_Error(ErrorMessage.userNotFound));
+            res.status(404).json(new API_Error(ErrorMessage.userNotFound));
         }
     } catch (err) {
         handleError(err, res);
@@ -111,7 +110,7 @@ export async function updateUser(req: Request, res: Response) {
             await user.save();
             res.json(user);
         } else {
-            res.status(400).json(new API_Error(ErrorMessage.userNotFound));
+            res.status(404).json(new API_Error(ErrorMessage.userNotFound));
         }
     } catch (err) {
         handleError(err, res);
