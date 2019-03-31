@@ -7,7 +7,7 @@ import * as passControl from "./pass";
 import * as classControl from "./class";
 import * as studentControl from "./student";
 import { checkAuthentication, checkToken, checkAuthorization } from "./auth";
-import { Roles } from "./common";
+import { Roles, defautlUserError, defaultServerError } from "./common";
 
 export const router = Router();
 
@@ -56,3 +56,7 @@ router.delete("/rosters/:classid/:userid",
 // Parameter Handlers
 router.param("userid", userControl.findUserFromIdParam);
 router.param("classid", classControl.findClassByIdParam);
+
+// Catch all 
+router.use(defautlUserError);
+router.use(defaultServerError);

@@ -31,10 +31,10 @@ const ClassSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
-    students: {
-        type: [mongoose.Schema.Types.ObjectId],
+    students: [{
+        type: mongoose.Schema.Types.ObjectId,
         ref: "User"
-    }
+    }]
 }, {
     toJSON: {
         getters: false, 

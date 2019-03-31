@@ -29,12 +29,15 @@ function splitClassString(c: string): {dept: string | null; num: number | null;}
 export async function findClassByIdParam(req: Request, res: Response, next: NextFunction, classid: string) {
     try {
         if (classid.length == config.objectIdLength) {
-            res.locals.class = await Class.findById(classid).populate("teacher", "firstname lastname email");
+            let c = await Class.findById(classid)
+                                        .populate("teacher", "firstname lastname email")
+                                        .populate("students");
         } else {
             let c = splitClassString(classid);
             if (c.dept && c.num) {
                 res.locals.class = await Class.findOne({department: c.dept, number: c.num})
-                                                .populate("teacher", "firstname lastname email");
+                                                .populate("teacher", "firstname lastname email")
+                                                .populate("students");
             }
         }
         next();

@@ -29,11 +29,13 @@ export enum ErrorMessage {
     missingParams = "Missing parameters in request",
     passwordNeeded = "Please provide a password",
     userNotFound = "User not found",
+    studentAlreadyInClass = "Student is already in the request class",
     teacherNotFound = "Teacher not found",
     classNotFound = "Class not found",
     incorrectAuthType = "Incorrect authorization type", 
     noAuthHeader = "No authorization header",
-    notAuthorized = "Not authorized"
+    notAuthorized = "Not authorized",
+    notFound = "Url Not found"
 }
 
 interface MongoError extends Error {
@@ -44,12 +46,17 @@ export function handleError(err: MongoError, res: Response) {
     if (err.name == "ValidationError" || (err.name == "MongoError" && err.code == 11000)) {
         res.status(400).json(err);
     } else {
+        // Not resolving the error for some reason?...
         res.status(500).json(new API_Error(ErrorMessage.defaultServer));
     }
 }
 
+export function defautlUserError(req: Request, res: Response, next: NextFunction) {
+    res.status(404).json(new API_Error(ErrorMessage.notFound));
+}
+
 export function defaultServerError(err: Error, req: Request, res: Response, next: NextFunction){
-    res.json(new API_Error(ErrorMessage.defaultServer));
+    res.status(500).json(new API_Error(ErrorMessage.defaultServer));
 }
 
 // ENCRYPTION
